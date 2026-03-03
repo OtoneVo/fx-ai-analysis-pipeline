@@ -33,8 +33,27 @@ def rsi(series: pd.Series, window: int = 14) -> pd.Series:
     return result
 
 
-def returns(series: pd.Series) -> pd.Series:
-    """対数リターン: ln(P_t / P_{t-1})"""
-    result = np.log(series / series.shift(1))
+def returns(series: pd.Series, period: int = 1) -> pd.Series:
+    """対数リターン: ln(P_t / P_{t-period})"""
+    result = np.log(series / series.shift(period))
     assert isinstance(result, pd.Series)
     return result
+
+
+def macd(series: pd.Series, fast: int = 12, slow: int = 26, signal: int = 9) -> tuple[pd.Series, pd.Series, pd.Series]:
+    """MACD（ライン、シグナル、ヒストグラム）"""
+    ema_fast = series.ewm(span=fast, adjust=False).mean()
+    ema_slow = series.ewm(span=slow, adjust=False).mean()
+    macd_line = ema_fast - ema_slow
+    signal_line = macd_line.ewm(span=signal, adjust=False).mean()
+    histogram = macd_line - signal_line
+    return macd_line, signal_line, histogram
+
+
+def bollinger_band_width(series: pd.Series, window: int = 20) -> pd.Series:
+    """ボリンジャーバンド幅（上バンド - 下バンド）/ 中央バンド"""
+    mid = series.rolling(window=window).mean()
+    std = series.rolling(window=window).std()
+    width = (2 * std) / mid
+    assert isinstance(width, pd.Series)
+    return width
