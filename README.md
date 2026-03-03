@@ -24,3 +24,13 @@ Accuracy: 0.4797（ベースライン）
 - 特徴量追加
 - モデル高度化（LightGBM等）
 - EA連携
+
+## 実行結果（Baseline）
+
+- Test samples: 123
+- Accuracy: 0.4797
+- Precision: 0.5294
+- Recall: 0.5294
+
+単純ルールでは予測困難であることを確認。
+今後は特徴量追加およびモデル高度化を検討。
